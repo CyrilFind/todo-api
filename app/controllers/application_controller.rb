@@ -1,2 +1,3 @@
-class ApplicationController < ActionController::API
+# Use Base ActionController for compatibility with ActiveAdmin
+class ApplicationController < ActionController::Base
 end
