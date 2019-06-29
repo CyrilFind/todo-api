@@ -4,9 +4,7 @@ class TasksController < ApiController
 
   # GET /tasks
   def index
-    @tasks = current_user.tasks
-
-    render json: @tasks
+    render json: current_user.tasks
   end
 
   # GET /tasks/1
@@ -16,37 +14,28 @@ class TasksController < ApiController
 
   # POST /tasks
   def create
-    @task = current_user.tasks.new(task_params)
-
-    if @task.save
-      render json: @task, status: :created, location: @task
-    else
-      render json: @task.errors, status: :unprocessable_entity
-    end
+    @task = current_user.tasks.create!(task_params)
+    render json: @task, status: :created, location: @task
   end
 
   # PATCH/PUT /tasks/1
   def update
-    if @task.update(task_params)
-      render json: @task
-    else
-      render json: @task.errors, status: :unprocessable_entity
-    end
+    render json: @task.update!(task_params)
   end
 
   # DELETE /tasks/1
   def destroy
     @task.destroy
+    head :no_content
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_task
-      @task = current_user.tasks.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def task_params
-      params.require(:task).permit(:user_id, :title, :description, :done, :due_date)
-    end
+  def set_task
+    @task = current_user.tasks.find(params[:id])
+  end
+
+  def task_params
+    params.require(:task).permit(:user_id, :title, :description, :done, :due_date)
+  end
 end
